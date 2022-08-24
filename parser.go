@@ -170,6 +170,7 @@ type FieldParser interface {
 	FieldName() (string, error)
 	CustomSchema() (*spec.Schema, error)
 	ComplementSchema(schema *spec.Schema) error
+	XmlSchema(schema *spec.Schema) error
 	IsRequired() (bool, error)
 }
 
@@ -1284,6 +1285,11 @@ func (parser *Parser) parseStructField(file *ast.File, field *ast.Field) (map[st
 	}
 
 	err = ps.ComplementSchema(schema)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	err = ps.XmlSchema(schema)
 	if err != nil {
 		return nil, nil, err
 	}

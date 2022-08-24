@@ -207,6 +207,25 @@ func splitNotWrapped(s string, sep rune) []string {
 	return result
 }
 
+func (ps *tagBaseFieldParser) XmlSchema(schema *spec.Schema) error {
+	if ps.tag.Get(xmlTag) != "" {
+		tag := ps.tag.Get(xmlTag)
+		elements := strings.Split(tag, ",")
+		var result []string
+		for _, el := range elements {
+			if el != "omitempty" {
+				result = append(result, el)
+			}
+		}
+		var xmlSchema spec.XMLObject
+		xmlSchema.Name = strings.Join(result, ",")
+
+		schema.XML = &xmlSchema
+	}
+
+	return nil
+}
+
 func (ps *tagBaseFieldParser) ComplementSchema(schema *spec.Schema) error {
 	types := ps.p.GetSchemaTypePath(schema, 2)
 	if len(types) == 0 {
